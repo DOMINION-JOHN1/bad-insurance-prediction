@@ -53,9 +53,9 @@ if st.button("Predict Bad Debt Risk"):
 
      # Create a RobustScaler object
     scaler = RobustScaler()
-
+    df = list(data.values())
     # Scale the 'Age' value
-    data['age'] = scaler.fit_transform(data[['age']])[0]
+    data['age'] = scaler.fit_transform(df[5])
     # Convert dictionary values to a list of feature values
     pred = model.predict(list(data.values()))
 

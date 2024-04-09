@@ -35,26 +35,21 @@ Age = st.number_input(feature_names['age'])
 
 # Button to trigger prediction
 if st.button("Predict Bad Debt Risk"):
-    data = {
-        feature_names['Sex_x']: Gender,
-        feature_names['mar_x']: Marital_status,
-        feature_names['Odesc_x']: Occupation,
-        feature_names['Cust_class_x']: Customer_category,
-        feature_names['postcode']: Postal_code,
-        feature_names['age']: Age
-    }
 
-    # **Handle missing categorical features:**
-    # 1. Identify potential missing features (replace with your logic)
-    missing_features = [key for key, value in data.items() if value is None or value == '']
+    # Handle missing categorical features (replace with your logic for identifying missing values)
+    missing_features = [key for key, value in locals().items() if key in feature_names.values() and (value is None or value == '')]
 
-    # 2. Add placeholder values for missing features (if applicable)
+    # Add placeholder values for missing features (if applicable)
     if missing_features:
         for feature in missing_features:
-            data[feature] = "Unknown"  # You can define a more suitable placeholder
+            locals()[feature] = "Unknown"  # You can define a more suitable placeholder
+
+    # Prepare data for prediction
+    scaled_age = scaler.fit_transform(np.array([Age]).reshape(-1, 1))
+    data = [Gender, Marital_status, Occupation, Customer_category, Postal_code, scaled_age[0][0]]
 
     # Make prediction
-    pred = model.predict(list(data.values()))
+    pred = model.predict(data)
 
     if pred == 'good debt':
         st.success("There is a low risk of bad debt for this customer.")
